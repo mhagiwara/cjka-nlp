@@ -1,11 +1,26 @@
 import * as React from 'react';
-import {findFirstMatches, segmentJamos, segmentSyllables} from '../KoreanInput';
+import { convert } from '../KoreanInput';
 
-class Keyboard extends React.Component {
 
-    input(event: React.FormEvent<HTMLInputElement>) {
-        console.log('input', event.currentTarget.value);
+interface KeyboardProps {
+
+}
+
+interface KeyboardState {
+    hangul: string;
+}
+
+class Keyboard extends React.Component<KeyboardProps, KeyboardState> {
+
+    constructor(props: KeyboardProps) {
+        super(props);
+        this.state = {hangul: ''};
     }
+
+    input = (event: React.FormEvent<HTMLInputElement>) => {
+        let value = event.currentTarget.value;
+        this.setState({hangul: convert(value)});
+    };
 
     public render() {
         return (
@@ -13,6 +28,8 @@ class Keyboard extends React.Component {
                 <h1>Korean Software Keyboard</h1>
 
                 <input type="text" onInput={this.input} />
+
+                <p>{this.state.hangul}</p>
             </div>
         );
     }

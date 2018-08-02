@@ -115,7 +115,7 @@ class Syllable {
     }
 }
 
-export function findFirstMatches(input: string): Jamo[] {
+function findFirstMatches(input: string): Jamo[] {
     // Given a string, returns an array of Jamos that match the prefixes of the string
     let results: Jamo[] = [];
     JAMOS.forEach(function (jamo) {
@@ -127,7 +127,7 @@ export function findFirstMatches(input: string): Jamo[] {
     return results;
 }
 
-export function segmentJamos(input: string): Jamo[][] {
+function segmentJamos(input: string): Jamo[][] {
     let results: Jamo[][] = [];
 
     if (!input) return [[]];
@@ -145,7 +145,7 @@ export function segmentJamos(input: string): Jamo[][] {
     return results;
 }
 
-export function segmentSyllables(jamos: Jamo[]): Syllable[] {
+function segmentSyllables(jamos: Jamo[]): Syllable[] {
     let syllable: Syllable | null = null;
     let results: Syllable[] = [];
     jamos.forEach(function (jamo) {
@@ -177,6 +177,18 @@ export function segmentSyllables(jamos: Jamo[]): Syllable[] {
     return results;
 }
 
-export function convert(input: string): Syllable[] {
+export function convert(input: string): string {
+    let jamoSequences: Jamo[][] = segmentJamos(input);
+    let shortestSyllables: Syllable[] = [];
+    let shortestSyllablesLength = Number.MAX_SAFE_INTEGER;
 
+    jamoSequences.forEach(function (jamos) {
+        let syllables: Syllable[] = segmentSyllables(jamos);
+        if (syllables.length < shortestSyllablesLength) {
+            shortestSyllables = syllables;
+            shortestSyllablesLength = syllables.length;
+        }
+    });
+
+    return shortestSyllables.map(syl => syl.render()).join('');
 }
